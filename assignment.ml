@@ -1,6 +1,15 @@
+(*
+name:WONG Yuk Chun
+itsc:ycwongal
+sid :20419764
+*)
 
 datatype course = C of (string * string) list;
 datatype enroll = E of (int * string list) list;
+
+(*Helper functions*)
+fun reduce f [ ] v = v
+| reduce f (head::tail) v = f (head, reduce f tail v);
 
 fun AppendUnique ([],L2,f) = L2
 |   AppendUnique (L1h::L1t , L2,f) = 
@@ -14,10 +23,12 @@ fun AppendUnique ([],L2,f) = L2
 fun CourseMatch (a:(string * string)) (b:(string * string)) = #1a= #1b;
 fun StrMatch (a:string) (b:string) = a=b;
 
+(*Q1*)
 fun insert_course ([],c:course) = c
 |   insert_course(h::t,C([])) = C(h::t)
 |   insert_course(l,C(L)) = C(AppendUnique (l,L,CourseMatch));
 
+(*Q2*)
 fun insert_enroll (s:(int * string list),E([])) = E([s])
 |   insert_enroll (s,E(L)) = 
         let 

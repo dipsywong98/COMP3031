@@ -1,19 +1,22 @@
+
 datatype course = C of (string * string) list;
 datatype enroll = E of (int * string list) list;
 
+fun AppendUnique ([],L2,f) = L2
+|   AppendUnique (L1h::L1t , L2,f) = 
+        let
+            fun Exist_ (el,[]) = false
+            |   Exist_ (el, h::t) = if(f el h) then true else Exist_ (el, t);
+        in
+            if(Exist_ (L1h , L2)) then AppendUnique (L1t , L2, f) else AppendUnique (L1t , L2 @ [L1h],f)
+        end;
+
+fun CourseMatch (a:(string * string)) (b:(string * string)) = #1a= #1b;
+fun StrMatch (a:string) (b:string) = a=b;
+
 fun insert_course ([],c:course) = c
 |   insert_course(h::t,C([])) = C(h::t)
-|   insert_course(h::t,C(L)) = 
-        let 
-            fun Exist (c,C([])) = false
-            |   Exist (c:(string * string),C(h::t)) = 
-                    if( #1c= #1h) then true 
-                    else Exist(c,C(t));
-        in
-            if(Exist(h,C(L))) 
-            then insert_course(t,C(L)) 
-            else insert_course(t,C(L@[h])) 
-        end;
+|   insert_course(l,C(L)) = C(AppendUnique (l,L,CourseMatch));
 
 fun insert_enroll (s:(int * string list),E([])) = E([s])
 |   insert_enroll (s,E(L)) = 
@@ -28,7 +31,7 @@ fun insert_enroll (s:(int * string list),E([])) = E([s])
             if(Exist(s,E(L))) then E(map (
                     fn x=> 
                         if(#1s= #1x) 
-                        then (#1x, #2x @ #2s) 
+                        then (#1x, AppendUnique( #2x , #2s, StrMatch)) 
                         else x
                     ) L
                 ) else E(L@[s]) end;

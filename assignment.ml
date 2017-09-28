@@ -9,7 +9,7 @@ datatype enroll = E of (int * string list) list;
 
 (*Helper functions*)
 fun reduce f [ ] v = v
-| reduce f (head::tail) v = f (head, reduce f tail v);
+|   reduce f (head::tail) v = f (head, reduce f tail v);
 
 fun AppendUnique ([],L2,f) = L2
 |   AppendUnique (L1h::L1t , L2,f) = 
@@ -20,24 +20,23 @@ fun AppendUnique ([],L2,f) = L2
             if(Exist_ (L1h , L2)) then AppendUnique (L1t , L2, f) else AppendUnique (L1t , L2 @ [L1h],f)
         end;
 
-fun CourseMatch (a:(string * string)) (b:(string * string)) = #1a= #1b;
-fun StrMatch (a:string) (b:string) = a=b;
-
 (*Q1*)
+fun CourseMatch (a:(string * string)) (b:(string * string)) = #1a= #1b;
+
 fun insert_course ([],c:course) = c
 |   insert_course(h::t,C([])) = C(h::t)
 |   insert_course(l,C(L)) = C(AppendUnique (l,L,CourseMatch));
 
 (*Q2*)
+fun StrMatch (a:string) (b:string) = a=b;
+
 fun insert_enroll (s:(int * string list),E([])) = E([s])
 |   insert_enroll (s,E(L)) = 
         let 
             fun Exist(s:(int * string list),E([])) = false
             |   Exist(s,E(h::t)) = 
                 if( #1s= #1h) then true
-                else Exist(s,E(t));
-                
-            
+                else Exist(s,E(t));    
         in 
             if(Exist(s,E(L))) then E(map (
                     fn x=> 
@@ -47,14 +46,35 @@ fun insert_enroll (s:(int * string list),E([])) = E([s])
                     ) L
                 ) else E(L@[s]) end;
 
+(*Q3*)
+fun query_students (course_id,E(L)) =
+    let 
+        fun Exist (course_id, []) = false
+        |   Exist (course_id, h::t) = if (course_id = h) then true else Exist(course_id, t);
 
+        fun push_students (course_id,E([]),[]) = []
+        |   push_students (course_id,E([]),students) = students
+        |   push_students (course_id,E(h::t),students) = 
+                if( Exist(course_id, #2 h)) then push_students (course_id,E(t),students @ [#1 h])
+                else push_students (course_id,E(t),students);
+    in
+        push_students(course_id,E(L),[])
+    end;
+
+print("....(Q1)....");
 insert_course ([], C [("comp10", "p01")]);
 insert_course ([("comp12", "p02")], C []);
 insert_course ([("comp10", "p02")], C [("comp10", "p01")]);
 insert_course ([("comp13", "p01"), ("comp12", "p02")], C [("comp10","p01")]);
-print(".............");
+print("....(Q2)....");
  insert_enroll ((1702, []), E [(1701, ["comp10", "comp11"])]);
  insert_enroll ((1701, ["comp10", "comp11"]), E []);
  insert_enroll ((1701, ["comp11", "comp10"]), E [(1701, ["comp10",
 "comp12"])]);
 insert_enroll ((1702, ["comp10"]), E [(1701, ["comp10", "comp11"])]);
+print("....(Q3)....");
+query_students ("comp10", E []);
+query_students ("comp10", E [(1701, ["comp10"])]);
+query_students ("comp11", E [(1701, ["comp10"])]);
+query_students ("comp10", E [(1701, ["comp10", "comp11"]), (1702,
+["comp13", "comp10"]), (1703, [])]);

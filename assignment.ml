@@ -73,6 +73,34 @@ fun list_distinct_students (prof, C(c), E(e)) =
 
 fun count_distinct_students (prof, C(c), E(e)) = length(list_distinct_students (prof, C(c), E(e))) ;
 
+(*Q5*)
+(*remove course and enrollment by course id*)
+fun delete_course_enroll (course_id, C(c), E(e)) = 
+    let fun delete_course (course_id, C([]), C(c_list)) = C(c_list)
+        |   delete_course (course_id, C(h::t), C(c_list)) = 
+            if (course_id = #1 h) then delete_course (course_id, C(t), C(c_list))
+            else delete_course (course_id, C(t), C(c_list@[h]));
+        fun delete_enroll (course_id, E([]) , E(e_list)) = E(e_list)
+        |   delete_enroll (course_id , E(h::t), E(e_list)) = 
+            let fun student_drop (course_id, [], fin_courses) = fin_courses
+                |   student_drop (course_id, h::t, fin_courses) = 
+                    if(h = course_id) then student_drop (course_id , t, fin_courses)
+                    else student_drop (course_id , t, fin_courses@[h]);
+                val std = (# 1 h , student_drop (course_id, #2 h, []))
+            in
+
+            delete_enroll (course_id, E(t), E(e_list@[std])) end;
+    in
+
+    (delete_course(course_id,C(c),C([])) , delete_enroll(course_id,E(e),E([])))
+
+end;
+            
+
+
+
+
+
 print("....(Q1)....");
 insert_course ([], C [("comp10", "p01")]);
 insert_course ([("comp12", "p02")], C []);
@@ -101,3 +129,12 @@ count_distinct_students ("p01", C [("comp10", "p01")], E [(1701,
 count_distinct_students ("p01", C [("comp10", "p01"), ("comp12",
 "p02"), ("comp13", "p01")], E [(1701, ["comp10", "comp11"]), (1702,
 ["comp13"])]);
+
+print("....(Q5)....");
+delete_course_enroll ("comp10", C [], E[]);
+delete_course_enroll ("comp10", C [("comp10", "p01")], E []);
+delete_course_enroll ("comp10", C [("comp10", "p01")], E [(1701,
+["comp10"])]);
+delete_course_enroll ("comp10", C [("comp10", "p01"), ("comp12",
+"p02")], E [(1701, ["comp10", "comp11"]), (1702, ["comp13", "comp10"]),
+(1703, [])]);

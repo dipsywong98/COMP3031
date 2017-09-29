@@ -63,7 +63,7 @@ fun query_students (course_id,E(L)) =
 
 (*Q4*)
 fun IntMatch a b = a=b;
-fun count_distinct_students (prof, C(c), E(e)) =
+fun list_distinct_students (prof, C(c), E(e)) =
     let fun Helper (prof, C([]), E(_), students_list) = students_list
     |   Helper (prof, C(_), E([]), students_list) = students_list 
     |   Helper (prof, C(h::t), E(e), students_list) = 
@@ -71,6 +71,7 @@ fun count_distinct_students (prof, C(c), E(e)) =
         else Helper (prof, C(t), E(e), students_list)
     in Helper (prof, C(c), E(e), []) end;
 
+fun count_distinct_students (prof, C(c), E(e)) = length(list_distinct_students (prof, C(c), E(e))) ;
 
 print("....(Q1)....");
 insert_course ([], C [("comp10", "p01")]);

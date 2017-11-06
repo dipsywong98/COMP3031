@@ -17,7 +17,7 @@ ws [ \t]+
 digits [0-9]
 number [\-]?(0|([1-9]+{digits}*))
  /************* Start: add your definitions here*/
-matric \[ *( *\[ *( *-?[0-9]+ *, *)* *-?[0-9]+ *\] *, *)*( *\[ *( *-?[0-9]+ *, *)* *-?[0-9]+ *\] *) *\]
+matrix (\[ *( *\[ *( *-?[0-9]+ *, *)* *-?[0-9]+ *\] *, *)*( *\[ *( *-?[0-9]+ *, *)* *-?[0-9]+ *\] *) *\])
     
  /************* End: add your definitions here */
 %%
@@ -26,10 +26,7 @@ matric \[ *( *\[ *( *-?[0-9]+ *, *)* *-?[0-9]+ *\] *, *)*( *\[ *( *-?[0-9]+ *, *
 
 REV yylval = "REV";printf("%s",yytext);return REV;
 NEG yylval = "NEG";printf("%s",yytext);return NEG;
-{number} yylval = (char*)malloc(sizeof(char)*MAXL);strcpy(yylval, yytext);printf("%s",yytext);return NUM;
-\[ printf("%c",*yytext); return *yytext;
-\] printf("%c",*yytext); return *yytext;
-, printf("%c",*yytext); return *yytext;
+(\[ *( *\[ *( *-?[0-9]+ *, *)* *-?[0-9]+ *\] *, *)*( *\[ *( *-?[0-9]+ *, *)* *-?[0-9]+ *\] *) *\]) (char*)malloc(sizeof(char)*MAXL);strcpy(yylval, yytext);printf("%s",yytext);return MAT;
 [+\-*\/] printf("%c",*yytext); return *yytext;
 . if(*yytext==' '||*yytext=='\t'){REJECT;}else{ printf("missed:%c",*yytext);}
 

@@ -65,15 +65,7 @@ s3: REV s3          {$$=Rev($2);}
 s4: MATRIX          {$$=$1}
     | '(' s1 ')'    {$$=$2;}
     ;
-MATRIX: '[' COLS ']'{$$=malloc(sizeof(char*)*MAXL);sprintf($$,"[%s]",$2);}
-    ;
-COLS: ROW           {$$=$1;}
-    | ROW ','       {$$=malloc(sizeof(char*)*(strlen($1)+1));sprintf($$,"%s,",$1);}
-ROW: '[' VEC ']'    {$$=malloc(sizeof(char*)*MAXL);sprintf($$,"[%s]",$2);}
-    ;
-VEC: NUM ',' VEC    {$$=malloc(sizeof(char*)*MAXL);sprintf($$,"%s,%s",$1,$3);}
-    | NUM           {$$=$1;}
-    ;
+MATRIX: MAT         {$$=FFormat($1);printf("%s",$$);}
 
 
 // end of your grammar rules and actions

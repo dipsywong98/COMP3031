@@ -24,10 +24,14 @@ matric \[ *( *\[ *( *-?[0-9]+ *, *)* *-?[0-9]+ *\] *, *)*( *\[ *( *-?[0-9]+ *, *
 \n return *yytext;
  /* Start: add your rules here*/
 
-REV yylval = "REV";return REV;
-NEG yylval = "NEG";return NEG;
-{number} yylval = (char*)malloc(sizeof(char)*MAXL);strcpy(yylval, yytext);return NUM;
-. printf("%c",*yytext); return *yytext;
+REV yylval = "REV";printf("%s",yytext);return REV;
+NEG yylval = "NEG";printf("%s",yytext);return NEG;
+{number} yylval = (char*)malloc(sizeof(char)*MAXL);strcpy(yylval, yytext);printf("%s",yytext);return NUM;
+\[ printf("%c",*yytext); return *yytext;
+\] printf("%c",*yytext); return *yytext;
+, printf("%c",*yytext); return *yytext;
+[+\-*\/] printf("%c",*yytext); return *yytext;
+. if(*yytext==' '||*yytext=='\t'){REJECT;}else{ printf("missed:%c",*yytext);}
 
  /* End: add your rules here*/
 {ws}

@@ -48,31 +48,31 @@ line: 	'\n'
 
 // start of your grammar rules and actions 
 
-expr: s1
+expr: s1            {$$=$1;}
     ;
-s1: s1 '+' s2 
-    | s1 '-' s2 
-    | s2
+s1: s1 '+' s2       {$$=Add($1,$3);printf("plus:%s + %s",$1,$3);}
+    | s1 '-' s2     {$$=Minus($1,$3);}
+    | s2            {$$=$1;}
     ;
-s2: s2 '*' s3 
-    | s2 '/' s3 
-    | s3
+s2: s2 '*' s3       {$$=Dot($1,$3);}
+    | s2 '/' s3     {$$=Div($1,$3);}
+    | s3            {$$=$1;}
     ;
-s3: REV s3 
-    | NEG s3 
-    | s4
+s3: REV s3          {$$=Rev($2);} 
+    | NEG s3        {$$=Neg($2);}
+    | s4            {$$=$1}
     ;
-s4: MATRIX 
-    | '(' s1 ')'
+s4: MATRIX          {$$=$1}
+    | '(' s1 ')'    {$$=$2;}
     ;
-MATRIX: '[' COLS ']'
+MATRIX: '[' COLS ']'{$$=malloc(sizeof(char*)*MAXL);sprintf($$,"[%s]",$2);}
     ;
-COLS: ROW
-    | ROW ','
-ROW: '[' VEC ']'
+COLS: ROW           {$$=$1;}
+    | ROW ','       {$$=malloc(sizeof(char*)*(strlen($1)+1));sprintf($$,"%s,",$1);}
+ROW: '[' VEC ']'    {$$=malloc(sizeof(char*)*MAXL);sprintf($$,"[%s]",$2);}
     ;
-VEC: NUM ',' VEC
-    | NUM
+VEC: NUM ',' VEC    {$$=malloc(sizeof(char*)*MAXL);sprintf($$,"%s,%s",$1,$3);}
+    | NUM           {$$=$1;}
     ;
 
 

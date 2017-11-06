@@ -50,7 +50,7 @@ line: 	'\n'
 
 expr: s1            {$$=$1;}
     ;
-s1: s1 '+' s2       {$$=Add($1,$3);printf("plus:%s + %s",$1,$3);}
+s1: s1 '+' s2       {$$=Add($1,$3);}
     | s1 '-' s2     {$$=Minus($1,$3);}
     | s2            {$$=$1;}
     ;
@@ -68,7 +68,7 @@ s4: MATRIX          {$$=$1}
 MATRIX: '[' COLS ']'{$$=malloc(sizeof(char*)*MAXL);sprintf($$,"[%s]",$2);}
     ;
 COLS: ROW           {$$=$1;}
-    | ROW ','       {$$=malloc(sizeof(char*)*(strlen($1)+1));sprintf($$,"%s,",$1);}
+    | ROW ',' COLS      {$$=malloc(sizeof(char*)*(strlen($1)+1));sprintf($$,"%s,%s",$1,$3);}
 ROW: '[' VEC ']'    {$$=malloc(sizeof(char*)*MAXL);sprintf($$,"[%s]",$2);}
     ;
 VEC: NUM ',' VEC    {$$=malloc(sizeof(char*)*MAXL);sprintf($$,"%s,%s",$1,$3);}
@@ -102,10 +102,10 @@ int main(int argc, char *argv[]){
 
 int yyerror(const char* s)
 {
-//    extern int yylineno;
-//    extern char *yytext;
-//    printf("\n^%d: %s at %s #%d\n", yylineno, s, yytext, (int)(*yytext));
-//    return 0;
+    /*extern int yylineno;
+    extern char *yytext;
+    printf("\n^%d: %s at %s #%d\n", yylineno, s, yytext, (int)(*yytext));
+    return 0;*/
 }
 
 char *FFormat(const char* str){

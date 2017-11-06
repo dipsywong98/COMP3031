@@ -17,24 +17,20 @@ ws [ \t]+
 digits [0-9]
 number [\-]?(0|([1-9]+{digits}*))
  /************* Start: add your definitions here*/
-matric \[ *( *\[ *( *-?[0-9]+ *, *)* *-?[0-9]+ *\] *, *)*( *\[ *( *-?[0-9]+ *, *)* *-?[0-9]+ *\] *) *\]
-    
+
  /************* End: add your definitions here */
 %%
 \n return *yytext;
  /* Start: add your rules here*/
-
+ 
 REV yylval = "REV";printf("%s",yytext);return REV;
 NEG yylval = "NEG";printf("%s",yytext);return NEG;
 {number} yylval = (char*)malloc(sizeof(char)*MAXL);strcpy(yylval, yytext);printf("%s",yytext);return NUM;
-\[ printf("%c",*yytext); return *yytext;
-\] printf("%c",*yytext); return *yytext;
-, printf("%c",*yytext); return *yytext;
-[+\-*\/] printf("%c",*yytext); return *yytext;
-. if(*yytext==' '||*yytext=='\t'){REJECT;}else{ printf("missed:%c",*yytext);}
 
- /* End: add your rules here*/
+[+\-*\/,\[\]\n()] printf("%s",yytext);return *yytext;
 {ws}
+. printf("missed: '%s'", yytext);
+ /* End: add your rules here*/
 %%
 
 void RmWs(char* str){

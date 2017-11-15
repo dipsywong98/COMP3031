@@ -104,8 +104,8 @@ int yyerror(const char* s)
 {
     /*extern int yylineno;
     extern char *yytext;
-    printf("\n^%d: %s at %s #%d\n", yylineno, s, yytext, (int)(*yytext));
-    return 0;*/
+    printf("\n^%d: %s at %s #%d\n", yylineno, s, yytext, (int)(*yytext));*/
+    return 0;
 }
 
 char *FFormat(const char* str){

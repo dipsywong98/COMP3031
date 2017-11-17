@@ -7,8 +7,8 @@ teach(p02, [c23]).
 teach(p03, [c10]).
 teach(p04, []).
 
-debug([X|Y]):-print(X),print(","),debug(Y).
-debug(_):-print("\n"),!.
+debug([X|Y]):-print(X),put(44),debug(Y),!.
+debug(_):-put(10),!.
 
 member(X,[H|_]):-X=H.
 member(X,[_|L]):-member(X,L).
@@ -24,4 +24,9 @@ append([X | X1], Y, [X | L]) :- append(X1, Y, L).
 
 helperq1([],[]):-!.
 helperq1([C|CL],[P|PL]):-teach(P,TL),member(C,TL),helperq1(CL,PL),!.
-prof_id(S,PL):-enroll(S,CL),helperq1(CL,PL).
+prof_ids(S,PL):-enroll(S,CL),helperq1(CL,PL).
+
+helperq2([],_,[]).
+helperq2([A|L],B,[A|C]):-member(A,B),helperq2(L,B,C),!.
+helperq2(_,_,[]).
+common_enroll(SA,SB,L):-enroll(SA,CA),enroll(SB,CB),helperq2(CA,CB,L).

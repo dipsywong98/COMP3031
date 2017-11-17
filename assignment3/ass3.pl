@@ -22,11 +22,16 @@ tc(Prof,C):-teach(Prof,TL),member(C,TL).
 append([],L, L).
 append([X | X1], Y, [X | L]) :- append(X1, Y, L).
 
+subtract(_,[],[]).
+subtract(A,[H|T],[H|C]):-A\=H,subtract(A,T,C),!.
+subtract(A,[H|T],C):-A=H,subtract(A,T,C),!.
+
 helperq1([],[]):-!.
 helperq1([C|CL],[P|PL]):-teach(P,TL),member(C,TL),helperq1(CL,PL),!.
 prof_ids(S,PL):-enroll(S,CL),helperq1(CL,PL).
 
-helperq2([],_,[]).
-helperq2([A|L],B,[A|C]):-member(A,B),helperq2(L,B,C),!.
-helperq2(_,_,[]).
-common_enroll(SA,SB,L):-enroll(SA,CA),enroll(SB,CB),helperq2(CA,CB,L).
+helperq2([],_,[]):-!.
+helperq2(_,[],[]):-!.
+helperq2(CA,CB,[C|CL]):-member(C,CA),member(C,CB),subtract(C,CA,LA),subtract(C,CB,LB),helperq2(LA,LB,CL),!.
+helperq2(_,_,[]):-!.
+common_courses(SA,SB,L):-enroll(SA,CA),enroll(SB,CB),SA\=SB,helperq2(CA,CB,L).

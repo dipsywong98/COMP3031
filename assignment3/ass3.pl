@@ -34,4 +34,5 @@ helperq2([],_,[]):-!.
 helperq2(_,[],[]):-!.
 helperq2(CA,CB,[C|CL]):-member(C,CA),member(C,CB),subtract(C,CA,LA),subtract(C,CB,LB),helperq2(LA,LB,CL),!.
 helperq2(_,_,[]):-!.
-common_courses(SA,SB,L):-enroll(SA,CA),enroll(SB,CB),SA\=SB,helperq2(CA,CB,L).
+common_enroll(SA,SB,L):-enroll(SA,CA),enroll(SB,CB),SA\=SB,helperq2(CA,CB,L).
+common_enroll(SA,SB,L):-fail.

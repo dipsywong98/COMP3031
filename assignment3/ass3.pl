@@ -35,4 +35,20 @@ helperq2(_,[],[]):-!.
 helperq2(CA,CB,[C|CL]):-member(C,CA),member(C,CB),subtract(C,CA,LA),subtract(C,CB,LB),helperq2(LA,LB,CL),!.
 helperq2(_,_,[]):-!.
 common_enroll(SA,SB,L):-enroll(SA,CA),enroll(SB,CB),SA\=SB,helperq2(CA,CB,L).
-common_enroll(SA,SB,L):-fail.
+common_enroll(_,_,_):-fail.
+
+union([],L, L).
+union([X | X1], Y, L) :- member(X,Y), union(X1, Y, L),!.
+union([X | X1], Y, [X | L]) :- union(X1, Y, L),!.
+
+all_students_helper(F,[S|SL]):-enroll(S,_),\+member(S,F),all_students_helper([S|F],SL),!.
+all_students_helper(_,[]).
+all_students(SL):-all_students_helper([],SL).
+
+intersect([X|_],Y):-member(X,Y),!.
+intersect([_|XL],Y):-intersect(XL,Y).
+
+helperq3(TL,[S|ASL],[S|SL]):-enroll(S,CL),intersect(TL,CL),helperq3(TL,ASL,SL),!.
+helperq3(TL,[_|ASL],SL):-helperq3(TL,ASL,SL),!.
+helperq3(_,[],[]).
+student_list(P,SL):- teach(P,TL),all_students(ASL),helperq3(TL,ASL,SL).

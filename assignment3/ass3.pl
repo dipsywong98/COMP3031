@@ -70,4 +70,4 @@ reduce([X|I],[X|O]):-reduce(I,O),!.
 
 all_course_helper(SEEN,[C|ACL]):-teach(_,CL),member(C,CL),\+member(C,SEEN),all_course_helper([C|SEEN],ACL).
 all_course_helper(_,[]).
-all_course(C):-all_course_helper([],C),!.
+course_list(C):-all_course_helper([],C),!.

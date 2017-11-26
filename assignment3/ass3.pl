@@ -67,3 +67,16 @@ course_list(C):-all_course_helper([],C),!.
 
 get_length([],0).
 get_length([_|L],N1):-get_length(L,N),N1 is N+1.
+
+% ccc3(C,[S|SL],[S|L]):-enroll(S,CL),member(C,CL),ccc3(C,SL,L).
+% ccc3(C,[_|SL],L):-ccc3(C,SL,L).
+% ccc3(_,[],[]).
+% ccc(C,L):-all_students(SL),ccc3(C,SL,L).
+% count_students(C,N):-ccc(C,L),get_length(L,N).
+
+enroll_list_helper(C,[S|AS],[S|SL]):-enroll(S,CL),member(C,CL),enroll_list_helper(C,AS,SL),!.
+enroll_list_helper(C,[S|AS],SL):-enroll(S,CL),\+member(C,CL),enroll_list_helper(C,AS,SL),!.
+enroll_list_helper(_,[],[]):-!.
+
+enroll_list(C,SL):-all_students(ALL_S),enroll_list_helper(C,ALL_S,SL),!.
+count_students(C,N):-course_list(CL),member(C,CL),enroll_list(C,L),get_length(L,N).

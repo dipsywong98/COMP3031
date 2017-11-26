@@ -39,7 +39,7 @@ common_enroll(_,_,_):-fail.
 
 union([],L, L).
 union([X | X1], Y, L) :- member(X,Y), union(X1, Y, L),!.
-union([X | X1], Y, [X | L]) :- union(X1, Y, L),!.
+union([X | X1], Y, [X | L]) :- union(X1, Y, L).
 
 all_students_helper(F,[S|SL]):-enroll(S,_),\+member(S,F),all_students_helper([S|F],SL),!.
 all_students_helper(_,[]).
@@ -61,6 +61,13 @@ reduce([],[]).
 reduce([X|I],O):-member(X,I),reduce(I,O),!.
 reduce([X|I],[X|O]):-reduce(I,O),!.
 
-helperq4([],[]).
-helperq4([P|PL],L):-teach(P,CL),helperq4(PL,LL),union(CL,LL,L).
-course_list(L):-all_prof(PL),helperq4(PL,L),!.
+% each_course([],[],[]).
+% each_course([],L,L).
+% each_course(L,[],L).
+% each_course([C|TL],CL,[C|KL]):-each_course(TL,CL,KL).
+% each_prof([P|PL],L,FL):-teach(P,TL),each_prof(PL,L,TL),each_course(TL,L,FL).
+% course_list(L):-all_prof(PL),each_prof().
+
+all_course_helper(SEEN,[C|ACL]):-teach(_,CL),member(C,CL),\+member(C,SEEN),all_course_helper([C|SEEN],ACL).
+all_course_helper(_,[]).
+all_course(C):-all_course_helper([],C),!.

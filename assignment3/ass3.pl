@@ -61,13 +61,9 @@ reduce([],[]).
 reduce([X|I],O):-member(X,I),reduce(I,O),!.
 reduce([X|I],[X|O]):-reduce(I,O),!.
 
-% each_course([],[],[]).
-% each_course([],L,L).
-% each_course(L,[],L).
-% each_course([C|TL],CL,[C|KL]):-each_course(TL,CL,KL).
-% each_prof([P|PL],L,FL):-teach(P,TL),each_prof(PL,L,TL),each_course(TL,L,FL).
-% course_list(L):-all_prof(PL),each_prof().
-
 all_course_helper(SEEN,[C|ACL]):-teach(_,CL),member(C,CL),\+member(C,SEEN),all_course_helper([C|SEEN],ACL).
 all_course_helper(_,[]).
 course_list(C):-all_course_helper([],C),!.
+
+get_length([],0).
+get_length([_|L],N1):-get_length(L,N),N1 is N+1.

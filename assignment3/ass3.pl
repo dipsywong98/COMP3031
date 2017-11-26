@@ -52,3 +52,15 @@ helperq3(TL,[S|ASL],[S|SL]):-enroll(S,CL),intersect(TL,CL),helperq3(TL,ASL,SL),!
 helperq3(TL,[_|ASL],SL):-helperq3(TL,ASL,SL),!.
 helperq3(_,[],[]).
 student_list(P,SL):- teach(P,TL),all_students(ASL),helperq3(TL,ASL,SL).
+
+all_prof_helper(F,[S|SL]):-teach(S,_),\+member(S,F),all_prof_helper([S|F],SL).
+all_prof_helper(_,[]).
+all_prof(SL):-all_prof_helper([],SL).
+
+reduce([],[]).
+reduce([X|I],O):-member(X,I),reduce(I,O),!.
+reduce([X|I],[X|O]):-reduce(I,O),!.
+
+helperq4([],[]).
+helperq4([P|PL],L):-teach(P,CL),helperq4(PL,LL),union(CL,LL,L).
+course_list(L):-all_prof(PL),helperq4(PL,L),!.

@@ -78,5 +78,6 @@ enroll_list_helper(C,[S|AS],[S|SL]):-enroll(S,CL),member(C,CL),enroll_list_helpe
 enroll_list_helper(C,[S|AS],SL):-enroll(S,CL),\+member(C,CL),enroll_list_helper(C,AS,SL),!.
 enroll_list_helper(_,[],[]):-!.
 
-enroll_list(C,SL):-all_students(ALL_S),enroll_list_helper(C,ALL_S,SL),!.
-count_students(C,N):-course_list(CL),member(C,CL),enroll_list(C,L),get_length(L,N).
+enroll_list(C,SL):-var(C),course_list(CL),member(C,CL),all_students(ALL_S),enroll_list_helper(C,ALL_S,SL).
+enroll_list(C,SL):- \+ var(C), all_students(ALL_S),enroll_list_helper(C,ALL_S,SL),!.
+count_students(C,N):-enroll_list(C,L),get_length(L,N).

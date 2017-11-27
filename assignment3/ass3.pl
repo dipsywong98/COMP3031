@@ -37,13 +37,23 @@ helperq2(_,_,[]):-!.
 common_enroll(SA,SB,L):-enroll(SA,CA),enroll(SB,CB),SA\=SB,helperq2(CA,CB,L).
 common_enroll(_,_,_):-fail.
 
+rev_helper([X|L],R,LL):-rev_helper(L,[X|R],LL).
+rev_helper([],L,L).
+rev(L,R):-var(R),rev_helper(L,[],R),!.
+rev(L,R):-var(L),rev_helper(R,[],L),!.
+rev(L,R):-rev_helper(L,[],R).
+
 union([],L, L).
 union([X | X1], Y, L) :- member(X,Y), union(X1, Y, L),!.
 union([X | X1], Y, [X | L]) :- union(X1, Y, L).
 
-all_students_helper(F,[S|SL]):-enroll(S,_),\+member(S,F),all_students_helper([S|F],SL),!.
-all_students_helper(_,[]).
-all_students(SL):-all_students_helper([],SL).
+% all_students_helper(F,[S|SL]):-enroll(S,_),\+member(S,F),all_students_helper([S|F],SL),!.
+% all_students_helper(_,[]).
+% all_students(SL):-all_students_helper([],SL).
+
+all_students_helper(F,[S|SL],K):-enroll(S,_),\+member(S,F),all_students_helper([S|F],SL,K),!.
+all_students_helper(K,[],K).
+all_students(K):-all_students_helper([],_,K).
 
 intersect([X|_],Y):-member(X,Y),!.
 intersect([_|XL],Y):-intersect(XL,Y).
